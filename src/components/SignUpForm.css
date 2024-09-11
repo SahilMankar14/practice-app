@@ -9,7 +9,8 @@ body {
   margin: 0;
 }
 
-.signup-container {
+.signup-container,
+.signin-container {
   background-color: white;
   margin: 2rem;
   padding: 2rem;
