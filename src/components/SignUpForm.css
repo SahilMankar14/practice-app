@@ -73,6 +73,18 @@ button:hover {
   margin-bottom: 0.5rem;
 }
 
+.required-asterisk {
+  color: red;
+  font-weight: bold;
+}
+
+.signup-footer,
+.signin-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 @media (max-width: 480px) {
   .signup-container {
     padding: 1rem;

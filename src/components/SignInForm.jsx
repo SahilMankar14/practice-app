@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./SignUpForm.css";
+import { Link, useNavigate } from "react-router-dom";
 
-const SignInForm = () => {
+const SignInForm = ({ setAuthenticated }) => {
   const [formData, setFormData] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -14,6 +17,7 @@ const SignInForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
     try {
       const response = await axios.post(
@@ -21,14 +25,24 @@ const SignInForm = () => {
         formData
       );
 
-      if (response) {
-        alert("Sign in successfully");
-      } else {
-        alert("User not found");
+      if (response.status === 200) {
+        const token = response.headers.get("Authorization");
+
+        if (token) {
+          localStorage.setItem("token", token);
+          console.log("Sign in successfully");
+          setAuthenticated(true);
+          navigate("/home");
+        }
       }
     } catch (error) {
-      alert("User not found");
-      console.log("Error:", error);
+      if (error.response && error.response.status === 401) {
+        setError("Invalid email or password.");
+      } else if (error.response && error.response.status === 500) {
+        setError("Internal server error. Please try again later.");
+      } else {
+        setError("An unexpected error occurred. Please try again later.");
+      }
     }
   };
 
@@ -57,9 +71,14 @@ const SignInForm = () => {
           onChange={handleChange}
           required
         />
-
         <button>Sign In</button>
       </form>
+      {error && <div className="error-message">{error}</div>}
+      <div className="signin-footer">
+        <p>
+          Don't have an account? <Link to="/signup">Sign Up</Link>
+        </p>
+      </div>
     </div>
   );
 };

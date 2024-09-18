@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./SignUpForm.css";
+import { Link } from "react-router-dom";
 
 const SignUpForm = () => {
   const initialState = {
@@ -96,7 +97,7 @@ const SignUpForm = () => {
       const response = await axios.post("http://localhost:5000/signup", {
         formData,
       });
-      alert("Form Submitted Successfully");
+      alert("Congratulations! You have successfully signed up.");
       setFormData(initialState);
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -108,7 +109,9 @@ const SignUpForm = () => {
     <div className="signup-container">
       <form onSubmit={handleSubmit}>
         <h3>Sign Up</h3>
-        <label htmlFor="name">First Name</label>
+        <label htmlFor="name">
+          First Name<span className="required-asterisk">*</span>
+        </label>
         <input
           type="text"
           id="name"
@@ -117,7 +120,9 @@ const SignUpForm = () => {
           onChange={handleChange}
           required
         />
-        <label>Middle Name</label>
+        <label>
+          Middle Name <span className="required-asterisk">*</span>
+        </label>
         <input
           type="text"
           id="middleName"
@@ -126,7 +131,9 @@ const SignUpForm = () => {
           onChange={handleChange}
           required
         />
-        <label>Last Name</label>
+        <label>
+          Last Name <span className="required-asterisk">*</span>
+        </label>
         <input
           type="text"
           id="lastName"
@@ -135,7 +142,9 @@ const SignUpForm = () => {
           onChange={handleChange}
           required
         />
-        <label>Full Name</label>
+        <label>
+          Full Name <span className="required-asterisk">*</span>
+        </label>
         <input
           type="text"
           id="fullName"
@@ -145,7 +154,9 @@ const SignUpForm = () => {
           required
           readOnly
         />
-        <label>Email</label>
+        <label>
+          Email <span className="required-asterisk">*</span>
+        </label>
         <input
           type="email"
           id="email"
@@ -154,7 +165,9 @@ const SignUpForm = () => {
           onChange={handleChange}
           required
         />
-        <label>Password</label>
+        <label>
+          Password <span className="required-asterisk">*</span>
+        </label>
         <input
           type="password"
           id="password"
@@ -164,7 +177,9 @@ const SignUpForm = () => {
           required
         />
         {passwordError && <div className="error-message">{passwordError}</div>}
-        <label>Confirm Password</label>
+        <label>
+          Confirm Password <span className="required-asterisk">*</span>
+        </label>
         <input
           type="password"
           id="confirmPassword"
@@ -176,7 +191,9 @@ const SignUpForm = () => {
         {confirmPasswordError && (
           <div className="error-message">{confirmPasswordError}</div>
         )}
-        <label>Date of Birth</label>
+        <label>
+          Date of Birth <span className="required-asterisk">*</span>
+        </label>
         <input
           type="date"
           id="dateOfBirth"
@@ -185,7 +202,7 @@ const SignUpForm = () => {
           onChange={handleChange}
           required
         />
-        <label>Age</label>
+        <label>Age </label>
         <input
           type="number"
           id="age"
@@ -194,7 +211,9 @@ const SignUpForm = () => {
           onChange={handleChange}
           readOnly
         />
-        <label>Gender</label>
+        <label>
+          Gender <span className="required-asterisk">*</span>
+        </label>
         <select
           id="gender"
           name="gender"
@@ -202,11 +221,14 @@ const SignUpForm = () => {
           onChange={handleChange}
           required
         >
+          <option value="">Select Gender</option>
           <option value="male">Male</option>
           <option value="female">Female</option>
           <option value="other">Other</option>
         </select>
-        <label>Role</label>
+        <label>
+          Role <span className="required-asterisk">*</span>
+        </label>
         <select
           id="role"
           name="role"
@@ -214,8 +236,9 @@ const SignUpForm = () => {
           onChange={handleChange}
           required
         >
+          <option value="">Select Role</option>
           <option value="manager">Manager</option>
-          <option value="developer">Employee</option>
+          <option value="developer">Developer</option>
           <option value="tester">Tester</option>
           <option value="Other">Other</option>
         </select>
@@ -229,6 +252,11 @@ const SignUpForm = () => {
         />
         <button>Submit</button>
       </form>
+      <div className="signup-footer">
+        <p>
+          Already have an account? <Link to="/">Sign In</Link>
+        </p>
+      </div>
     </div>
   );
 };
