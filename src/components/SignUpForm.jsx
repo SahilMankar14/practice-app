@@ -17,11 +17,13 @@ const SignUpForm = () => {
     gender: "",
     role: "",
     mobileno: "",
+    profilePhoto: null,
   };
   const [formData, setFormData] = useState(initialState);
 
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   useEffect(() => {
     setFormData((prevState) => ({
@@ -88,17 +90,49 @@ const SignUpForm = () => {
         setConfirmPasswordError("");
       }
     }
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+    if (e.target.name === "profilePhoto") {
+      const file = e.target.files[0];
+      setFormData({ ...formData, profilePhoto: file });
+      setPreviewUrl(URL.createObjectURL(file));
+    } else {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const formDataToSend = new FormData();
+    // Append form data fields to FormData
+    Object.keys(formData).forEach((key) => {
+      if (key !== "profilePhoto") {
+        formDataToSend.append(key, formData[key]);
+      }
+    });
+
+    if (formData.profilePhoto) {
+      formDataToSend.append("profilePhoto", formData.profilePhoto);
+    }
+
     try {
-      const response = await axios.post("http://localhost:5000/signup", {
-        formData,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/signup",
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       alert("Congratulations! You have successfully signed up.");
+
+      // Reset the form state including the profile photo and preview
       setFormData(initialState);
+      setPreviewUrl(null);
+
+      // Reset the file input field manually
+      document.getElementById("profilePhoto").value = null;
     } catch (error) {
       console.error("Error submitting form:", error);
       alert("There was an error submitting the form. Please try again.");
@@ -250,6 +284,29 @@ const SignUpForm = () => {
           value={formData.mobileno}
           onChange={handleChange}
         />
+        <label>
+          Upload Photo <span className="required-asterisk">*</span>
+        </label>
+        <input
+          type="file"
+          id="profilePhoto"
+          name="profilePhoto"
+          onChange={handleChange}
+          accept="image/*"
+          required
+        ></input>
+        {previewUrl && (
+          <img
+            src={previewUrl}
+            alt="Profile preview"
+            style={{
+              width: "100px",
+              height: "100px",
+              objectFit: "cover",
+              margin: "12px",
+            }}
+          />
+        )}
         <button>Submit</button>
       </form>
       <div className="signup-footer">
