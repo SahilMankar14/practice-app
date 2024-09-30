@@ -14,7 +14,7 @@ const Home = ({ setAuthenticated }) => {
         console.log("token:", token);
 
         const response = await axios.get(
-          "http://localhost:5000/get-user-data",
+          "https://practice-app-server.vercel.app/get-user-data",
           {
             headers: {
               Authorization: `Bearer ${token}`,
