@@ -125,7 +125,11 @@ const SignUpForm = () => {
           },
         }
       );
-      alert("Congratulations! You have successfully signed up.");
+      if (response.status === 400) {
+        alert("A user with this email already exists");
+      } else {
+        alert("Congratulations! You have successfully signed up.");
+      }
 
       // Reset the form state including the profile photo and preview
       setFormData(initialState);
